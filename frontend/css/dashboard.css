@@ -1,0 +1,124 @@
+/* Dashboard Specific Styles */
+
+.info-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.metric-card {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
+    text-align: center;
+}
+
+.metric-card:nth-child(2) {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.metric-card:nth-child(3) {
+    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-section {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.chart-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    color: var(--text-color);
+}
+
+.table-section {
+    margin-top: 3rem;
+}
+
+.table-section h2 {
+    margin-bottom: 1.5rem;
+}
+
+.data-table {
+    width: 100%;
+}
+
+.data-table tbody tr {
+    transition: var(--transition);
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(37, 99, 235, 0.05);
+    cursor: pointer;
+}
+
+/* Risk Category Badge */
+.risk-badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.risk-badge.stable {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: var(--stable-color);
+}
+
+.risk-badge.at-risk {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: var(--at-risk-color);
+}
+
+.risk-badge.high-risk {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: var(--high-risk-color);
+}
+
+/* Action Button */
+.btn-action {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-action:hover {
+    background-color: #1d4ed8;
+}
+
+@media (max-width: 1024px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .data-table {
+        font-size: 0.85rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}

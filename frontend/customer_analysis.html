@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Risk Analysis - Customer Churn Risk Detection</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/customer_analysis.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.3.4/dist/axios.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="brand-icon">📊</span>
+                <h1>Customer Churn Risk Detection System</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="customer_analysis.html" class="active">Customer Analysis</a></li>
+                <li><a href="inference.html">Inference</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Customer Search Section -->
+        <section class="section">
+            <h2>Search Customer</h2>
+            <div class="search-container">
+                <input 
+                    type="number" 
+                    id="customerIdInput" 
+                    placeholder="Enter Customer ID" 
+                    class="search-input"
+                    min="1"
+                >
+                <button id="searchBtn" class="btn btn-primary">Search</button>
+                <button id="compareBtn" class="btn btn-secondary">Compare Customers</button>
+            </div>
+        </section>
+
+        <!-- Single Customer Analysis -->
+        <div id="singleCustomerSection" class="hidden">
+            <!-- Customer Info Card -->
+            <section class="section">
+                <h2>Customer Information</h2>
+                <div class="customer-info-grid">
+                    <div class="info-card">
+                        <h3>Customer ID</h3>
+                        <p id="custId" class="large-text">-</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Account Weeks</h3>
+                        <p id="custAccountWeeks" class="large-text">-</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Monthly Charge</h3>
+                        <p id="custMonthlyCharge" class="large-text">-</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Contract Renewal</h3>
+                        <p id="custContractRenewal" class="large-text">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Risk Score Gauge -->
+            <section class="section gauge-section">
+                <h2>Risk Assessment</h2>
+                <div class="gauge-container">
+                    <canvas id="riskGaugeChart"></canvas>
+                    <div id="riskCategoryDisplay" class="risk-category-display">
+                        <p class="category-label">Risk Category:</p>
+                        <p id="riskCategory" class="category-badge">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Contribution Chart -->
+            <section class="section chart-section">
+                <h2>Risk Score Components</h2>
+                <canvas id="featureContributionChart"></canvas>
+            </section>
+
+            <!-- Customer Behavior Visualization -->
+            <section class="section chart-section">
+                <h2>Customer Behavior Metrics</h2>
+                <canvas id="behaviorVisualizationChart"></canvas>
+            </section>
+
+            <!-- Detailed Metrics -->
+            <section class="section">
+                <h2>Detailed Risk Scores</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Final Risk Score</h3>
+                        <p id="finalRiskScore" class="metric-value">0.00</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Reconstruction Error</h3>
+                        <p id="reconstructionErrorScore" class="metric-value">0.00</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Cluster Distance</h3>
+                        <p id="clusterDistanceScore" class="metric-value">0.00</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Anomaly Score</h3>
+                        <p id="anomalyScoreValue" class="metric-value">0.00</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Customer Comparison Section -->
+        <div id="customerComparisonSection" class="hidden">
+            <section class="section">
+                <h2>Customer Comparison</h2>
+                <div class="comparison-input">
+                    <input 
+                        type="number" 
+                        id="compareCustomer1" 
+                        placeholder="Customer ID 1" 
+                        class="search-input"
+                        min="1"
+                    >
+                    <input 
+                        type="number" 
+                        id="compareCustomer2" 
+                        placeholder="Customer ID 2" 
+                        class="search-input"
+                        min="1"
+                    >
+                    <button id="compareExecuteBtn" class="btn btn-primary">Compare</button>
+                    <button id="closCompareBtn" class="btn btn-secondary">Back to Search</button>
+                </div>
+            </section>
+
+            <div id="comparisonResultsSection" class="hidden">
+                <section class="section">
+                    <h2>Comparison Results</h2>
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3 id="comp1Title">Customer 1</h3>
+                            <div class="comparison-metrics">
+                                <div class="metric-row">
+                                    <span>Final Risk Score:</span>
+                                    <span id="comp1RiskScore">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Risk Category:</span>
+                                    <span id="comp1Category">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Monthly Charge:</span>
+                                    <span id="comp1Charge">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Account Weeks:</span>
+                                    <span id="comp1Weeks">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comparison-card">
+                            <h3 id="comp2Title">Customer 2</h3>
+                            <div class="comparison-metrics">
+                                <div class="metric-row">
+                                    <span>Final Risk Score:</span>
+                                    <span id="comp2RiskScore">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Risk Category:</span>
+                                    <span id="comp2Category">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Monthly Charge:</span>
+                                    <span id="comp2Charge">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Account Weeks:</span>
+                                    <span id="comp2Weeks">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section chart-section">
+                    <h2>Risk Score Comparison</h2>
+                    <canvas id="comparisonRiskChart"></canvas>
+                </section>
+
+                <section class="section chart-section">
+                    <h2>Behavior Comparison</h2>
+                    <canvas id="comparisonBehaviorChart"></canvas>
+                </section>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingSpinner" class="loading-spinner hidden">
+            <div class="spinner"></div>
+            <p>Loading customer data...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message hidden"></div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Customer Churn Risk Detection System. All rights reserved.</p>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/customer_analysis.js"></script>
+</body>
+</html>
